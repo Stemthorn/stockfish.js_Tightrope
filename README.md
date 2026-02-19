@@ -50,7 +50,7 @@ To learn how to use the engine in your own projects, see the <a href="https://gi
 - <a href="https://github.com/niklasf/">niklasf</a> <a href="https://github.com/niklasf/stockfish.js">stockfish.js</a>, <a href="https://github.com/niklasf/stockfish.wasm">stockfish.wasm</a>, and <a href="https://github.com/lichess-org/stockfish-web">stockfish-web</a>
 - <a href="https://github.com/hi-ogawa/Stockfish">hi-ogawa</a>
 - <a href="https://github.com/linrock">linrock</a>
-- <a href="https://www.chess.com/">Chess.com</a> for sponsering development of Stockfish.js
+- <a href="https://www.chess.com/">Chess.com</a> for sponsoring development of Stockfish.js
 
 See <a href="https://raw.githubusercontent.com/nmrugg/stockfish.js/master/AUTHORS">AUTHORS</a> for more credits.
 
