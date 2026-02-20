@@ -3,8 +3,8 @@ function engineGame(options) {
     var game = new Chess();
     var board;
     ///NOTE: If the WASM binary is not in the expected location, must be added after the hash.
-    var engine = typeof STOCKFISH === "function" ? STOCKFISH() : new Worker(options.stockfishjs || 'src/stockfish.js');
-    var evaler = typeof STOCKFISH === "function" ? STOCKFISH() : new Worker(options.stockfishjs || 'src/stockfish.js');
+    var engine = typeof STOCKFISH === "function" ? STOCKFISH() : new Worker(options.stockfishjs || 'node_modules/stockfish/bin/stockfish.js');
+    var evaler = typeof STOCKFISH === "function" ? STOCKFISH() : new Worker(options.stockfishjs || 'node_modules/stockfish/bin/stockfish.js');
     var engineStatus = {};
     var displayScore = false;
     var time = { wtime: 300000, btime: 300000, winc: 2000, binc: 2000 };
