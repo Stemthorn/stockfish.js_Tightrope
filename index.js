@@ -86,7 +86,8 @@ function initEngine(enginePath, cb)
                     filename = "stockfish-" + getVersion() + "-asm.js";
                     break;
                 default:
-                    return path;
+                    /// If it is not a keyword, then it should be the path to the engine, so use that.
+                    return p.resolve(process.cwd(), path);
             }
         }
         path = p.join(__dirname, "bin", filename);
