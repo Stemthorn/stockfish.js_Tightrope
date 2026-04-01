@@ -25,7 +25,7 @@ npm init -y
 npm install stockfish
 ```
 
-`run-stockfish.js`
+Then create a script, like `run-stockfish.js`:
 ```js
 var stockfish = require("stockfish")("lite-single", function onReady() {
     stockfish.sendCommand("uci");
