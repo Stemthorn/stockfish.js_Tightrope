@@ -4,7 +4,6 @@
 
 ///NOTE: If enginePath is not passed in, it will use the default stockfish.js engine.
 ///      If cb is not passed in, it will return a Promise.
-
 function initEngine(enginePath, cb)
 {
     if (typeof enginePath === "function") {
@@ -14,7 +13,7 @@ function initEngine(enginePath, cb)
     
     var fs = require("fs");
     var p = require("path");
-    var pathToEngine = enginePath || findDefaultEngine();
+    var pathToEngine = findDefaultEngine(enginePath);
     
     var ext = p.extname(pathToEngine);
     var basepath = pathToEngine.slice(0, -ext.length);
@@ -59,22 +58,49 @@ function initEngine(enginePath, cb)
         }
     }
     
-    
-    function findDefaultEngine()
+    function getVersion()
     {
-        var path = p.join(__dirname, "bin", "stockfish.js");
+        return require("./package.json").buildVersion;
+    }
+    
+    function findDefaultEngine(path)
+    {
+        var filename = "stockfish.js";
+        if (path) {
+            switch(path.toLowerCase()) {
+                case "full":
+                    filename = "stockfish-" + getVersion() + ".js";
+                    break;
+                case "lite":
+                    filename = "stockfish-" + getVersion() + "-lite.js";
+                    break;
+                case "single":
+                    filename = "stockfish-" + getVersion() + "-single.js";
+                    break;
+                case "lite-single":
+                case "single-lite":
+                    filename = "stockfish-" + getVersion() + "-lite-single.js";
+                    break;
+                case "asm":
+                    filename = "stockfish-" + getVersion() + "-asm.js";
+                    break;
+                default:
+                    return path;
+            }
+        }
+        var path = p.join(__dirname, "bin", filename);
         
         if (fs.existsSync(path)) {
             return path;
         }
         
-        path = p.join(__dirname, "src", "stockfish.js");
+        path = p.join(__dirname, "src", filename);
         
         if (fs.existsSync(path)) {
             return path;
         }
         
-        throw new Error("Cannot find stockfish.js. Please provide the path to the engine.");
+        throw new Error("Cannot find " + filename + ". Please provide the path to the engine. You may need to build the engine first.");
     }
     
     /// We have to manually assemble the WASM parts, if the engine is split into parts.
@@ -96,6 +122,7 @@ function initEngine(enginePath, cb)
     
     INIT_ENGINE()(engine).then(function checkIfReady()
     {
+        
         if (engine._isReady) {
             if (!engine._isReady()) {
                 return setTimeout(checkIfReady, 10);

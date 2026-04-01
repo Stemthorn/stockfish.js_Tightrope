@@ -8,9 +8,12 @@ require("./get-engine.js");
 
 var enginePath = process.argv[2];
 
-///NOTE: enginePath is optional.
+///NOTE: enginePath can be a path to any stockfish.js enginee or a keyword indicating which Stockfish.js engine to load.
+///      Keywords include: "full", "lite", "single", "lite-single", and "asm".
+///      enginePath is optional. If not passed, the full engine will be used.
+///      
 ///      If no callback function is passed in, this function will return a Promise which could be used for chaining or async/await calling.
-var stockfish = require("stockfish")(enginePath, onReady);
+var stockfish = require("stockfish")(enginePath || "lite-single", onReady);
 
 stockfish.listener = function (line)
 {

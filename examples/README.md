@@ -27,7 +27,7 @@ npm install stockfish
 
 `run-stockfish.js`
 ```js
-var stockfish = require("stockfish")(function onReady() {
+var stockfish = require("stockfish")("lite-single", function onReady() {
     stockfish.sendCommand("uci");
     stockfish.sendCommand("go depth 5");
 });
