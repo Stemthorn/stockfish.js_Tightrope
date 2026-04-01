@@ -7,12 +7,12 @@ Stockfish.js is currently updated to Stockfish 18.
 This edition of Stockfish.js comes in five flavors:
 
  * The large multi-threaded engine:
-    * This is strongest version of the engine, but it is very large (>100MB) and will only run in browsers with the proper <a href=https://web.dev/articles/cross-origin-isolation-guide>CORS headers</a> applied.
+    * This is the strongest version of the engine, but it is very large (>100MB) and will only run in browsers with the proper <a href=https://web.dev/articles/cross-origin-isolation-guide>CORS headers</a> applied.
     * Files: [`stockfish-18.js`](https://github.com/nmrugg/stockfish.js/releases/download/v18.0.0/stockfish-18.js) & [`stockfish-18.wasm`](https://github.com/nmrugg/stockfish.js/releases/download/v18.0.0/stockfish-18.wasm)
  * The large single-threaded engine:
     * This is also large but will run in browsers without CORS headers; however it cannot use multiple threads via the UCI command `setoption name Threads`.
     * Files: [`stockfish-18-single.js`](https://github.com/nmrugg/stockfish.js/releases/download/v18.0.0/stockfish-18-single.js) & [`stockfish-18-single.wasm`](https://github.com/nmrugg/stockfish.js/releases/download/v18.0.0/stockfish-18-single.wasm)
- * The lite mult-threaded engine:
+ * The lite multi-threaded engine:
     * This is the same as the first multi-threaded but much smaller (≈7MB) and quite a bit weaker.
     * Files: [`stockfish-18-lite.js`](https://github.com/nmrugg/stockfish.js/releases/download/v18.0.0/stockfish-18-lite.js) & [`stockfish-18-lite.wasm`](https://github.com/nmrugg/stockfish.js/releases/download/v18.0.0/stockfish-18-lite.wasm)
  * The lite single-threaded engine:
@@ -26,7 +26,7 @@ This edition of Stockfish.js comes in five flavors:
 
 It depends on your project, but most likely, you should use the `lite single-threaded` engine because it is fast and does not require any complicated setup. Although the full engine is objectively stronger, the lite engine is still far stronger than any human will ever be, and the full engine is so large that it can be very slow to load, which would cause a poor user experience.
 
-The WASM Stockfish engines will run on all modern browsers (e.g., Chrome/Edge/Firefox/Opera/Safari) on supported system (Windows 10+/macOS 11+/iOS 16+/Linux/Android), as well as currently supported versions of Node.js. For slightly older browsers, see the <a href=../../tree/Stockfish16>Stockfish.js 16 branch</a>. The ASM-JS engine will run in essentially any browser/runtime that supports JavaScript. For an engine that supports chess variants (like 3-check and Crazyhouse), see the <a href=../../tree/Stockfish11>Stockfish.js 11 branch</a>.
+The WASM Stockfish engines will run on all modern browsers (e.g., Chrome/Edge/Firefox/Opera/Safari) on supported systems (Windows 10+/macOS 11+/iOS 16+/Linux/Android), as well as currently supported versions of Node.js. For slightly older browsers, see the <a href=../../tree/Stockfish16>Stockfish.js 16 branch</a>. The ASM-JS engine will run in essentially any browser/runtime that supports JavaScript. For an engine that supports chess variants (like 3-check and Crazyhouse), see the <a href=../../tree/Stockfish11>Stockfish.js 11 branch</a>.
 
 ### How do I use stockfish.js?
 

@@ -24,7 +24,7 @@ if (!runEngine("../bin/stockfish.js")) {
     if (!runEngine("../src/stockfish.js")) {
         console.error("Could not find stockfish.js");
         if (fs.existsSync(p.join(__dirname, "..", "build.js"))) {
-            console.error("Try building them by runing build.js.");
+            console.error("Try building them by running build.js.");
         }
         process.exit(1);
     }
