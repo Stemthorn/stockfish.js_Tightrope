@@ -33,7 +33,7 @@ function initEngine(enginePath, cb)
             if (path.indexOf(".wasm") > -1) {
                 if (path.indexOf(".wasm.map") > -1) {
                     /// Set the path to the wasm map.
-                    return wasmPath + ".map"
+                    return wasmPath + ".map";
                 }
                 /// Set the path to the wasm binary.
                 return wasmPath;
@@ -67,6 +67,7 @@ function initEngine(enginePath, cb)
     {
         var filename = "stockfish.js";
         if (path) {
+            /// Check if the path is a keyword.
             switch(path.toLowerCase()) {
                 case "full":
                     filename = "stockfish-" + getVersion() + ".js";
@@ -88,7 +89,7 @@ function initEngine(enginePath, cb)
                     return path;
             }
         }
-        var path = p.join(__dirname, "bin", filename);
+        path = p.join(__dirname, "bin", filename);
         
         if (fs.existsSync(path)) {
             return path;
