@@ -23,6 +23,10 @@
   "license": "GPL-3.0",
   "bin":  "scripts/cli.js",
   "scripts": {
+    "build": "node build.js -f",
+    "build-lite": "node build.js --lite -f",
+    "build-single": "node build.js --single-threaded -f",
+    "build-single-lite": "node build.js --single-threaded --lite -f",
     "postinstall": "node scripts/postinstall.js",
     "prepack": "node scripts/prepack.js",
     "postpack": "node scripts/postpack.js"

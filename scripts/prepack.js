@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+/// License: MIT
+
+/// Creates the bin dir for packaging.
+
 "use strict";
 
 var fs = require("fs");

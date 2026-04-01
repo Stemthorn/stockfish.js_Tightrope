@@ -98,10 +98,10 @@ var loadEngine = (function ()
     {
         var worker = new_worker(path, options),
             engine = {started: Date.now()},
-            que = [],
+            queue = [],
             eval_regex = /Total Evaluation[\s\S]+\n$/;
         
-        function determine_que_num(line, que)
+        function determine_queue_num(line, queue)
         {
             var cmd_type,
                 first_word = get_first_word(line),
@@ -110,8 +110,8 @@ var loadEngine = (function ()
                 len;
             
             /// bench and perft are blocking commands.
-            if (que[0].cmd !== "bench" && que[0].cmd !== "perft") {
-                if (first_word === "uciok" || first_word === "option") {
+            if (queue[0].cmd !== "bench" && queue[0].cmd !== "perft") {
+                if (first_word === "uciok" || first_word === "option" || first_word === "id") {
                     cmd_type = "uci";
                 } else if (first_word === "readyok") {
                     cmd_type = "isready";
@@ -122,10 +122,10 @@ var loadEngine = (function ()
                     cmd_type = "other";
                 }
                 
-                len = que.length;
+                len = queue.length;
                 
                 for (i = 0; i < len; i += 1) {
-                    cmd_first_word = get_first_word(que[i].cmd);
+                    cmd_first_word = get_first_word(queue[i].cmd);
                     if (cmd_first_word === cmd_type || (cmd_type === "other" && (cmd_first_word === "d" || cmd_first_word === "eval"))) {
                         return i;
                     }
@@ -140,8 +140,8 @@ var loadEngine = (function ()
         {
             var line = typeof e === "string" ? e : e.data,
                 done,
-                que_num = 0,
-                my_que,
+                queue_num = 0,
+                my_queue,
                 split,
                 i;
             
@@ -163,31 +163,31 @@ var loadEngine = (function ()
                 engine.stream(line);
             }
             
-            /// Ignore invalid setoption commands since valid ones do not repond.
+            /// Ignore invalid setoption commands since valid ones do not respond.
             /// Ignore the beginning output too.
-            if (!que.length || line.substr(0, 14) === "No such option" || line.substr(0, 3) === "id " || line.substr(0, 9) === "Stockfish") {
+            if (!queue.length || line.substr(0, 14) === "No such option" || line.substr(0, 9) === "Stockfish") {
                 return;
             }
             
-            que_num = determine_que_num(line, que);
+            queue_num = determine_queue_num(line, queue);
             
-            my_que = que[que_num];
+            my_queue = queue[queue_num];
             
-            if (!my_que) {
+            if (!my_queue) {
                 return;
             }
             
-            if (my_que.stream) {
-                my_que.stream(line);
+            if (my_queue.stream) {
+                my_queue.stream(line);
             }
             
-            if (typeof my_que.message === "undefined") {
-                my_que.message = "";
-            } else if (my_que.message !== "") {
-                my_que.message += "\n";
+            if (typeof my_queue.message === "undefined") {
+                my_queue.message = "";
+            } else if (my_queue.message !== "") {
+                my_queue.message += "\n";
             }
             
-            my_que.message += line;
+            my_queue.message += line;
             
             /// Try to determine if the stream is done.
             if (line === "uciok") {
@@ -198,22 +198,22 @@ var loadEngine = (function ()
                 /// isready
                 done = true;
                 engine.ready = true;
-            } else if (line.substr(0, 8) === "bestmove" && my_que.cmd !== "bench") {
+            } else if (line.substr(0, 8) === "bestmove" && my_queue.cmd !== "bench") {
                 /// go [...]
                 done = true;
                 /// All "go" needs is the last line (use stream to get more)
-                my_que.message = line;
-            } else if (my_que.cmd === "d") {
+                my_queue.message = line;
+            } else if (my_queue.cmd === "d") {
                 if (line.substr(0, 15) === "Legal uci moves" || line.substr(0, 6) === "Key is") {
-                    my_que.done = true;
+                    my_queue.done = true;
                     done = true;
                     /// If this is the hack, delete it.
                     if (line === "Key is") {
-                        my_que.message = my_que.message.slice(0, -7);
+                        my_queue.message = my_queue.message.slice(0, -7);
                     }
                 }
-            } else if (my_que.cmd === "eval") {
-                if (eval_regex.test(my_que.message)) {
+            } else if (my_queue.cmd === "eval") {
+                if (eval_regex.test(my_queue.message)) {
                     done = true;
                 }
             } else if (line.substr(0, 8) === "pawn key") { /// "key"
@@ -226,11 +226,11 @@ var loadEngine = (function ()
             }
             
             if (done) {
-                /// Remove this from the que.
-                que.splice(que_num, 1);
+                /// Remove this from the queue.
+                queue.splice(queue_num, 1);
                 
-                if (my_que.cb && !my_que.discard) {
-                    my_que.cb(my_que.message);
+                if (my_queue.cb && !my_queue.discard) {
+                    my_queue.cb(my_queue.message);
                 }
             }
         };
@@ -245,10 +245,10 @@ var loadEngine = (function ()
                 console.log("debug (send): " + cmd);
             }
             
-            /// Only add a que for commands that always print.
+            /// Only add a queue for commands that always print.
             ///NOTE: setoption may or may not print a statement.
             if (cmd !== "ucinewgame" && cmd !== "flip" && cmd !== "stop" && cmd !== "ponderhit" && cmd.substr(0, 8) !== "position"  && cmd.substr(0, 9) !== "setoption" && cmd !== "stop") {
-                que[que.length] = {
+                queue[queue.length] = {
                     cmd: cmd,
                     cb: cb,
                     stream: stream
@@ -267,23 +267,23 @@ var loadEngine = (function ()
         engine.stop_moves = function stop_moves()
         {
             var i,
-                len = que.length;
+                len = queue.length;
             
             for (i = 0; i < len; i += 1) {
                 if (debugging) {
-                    console.log("debug (stop_moves): " + i, get_first_word(que[i].cmd))
+                    console.log("debug (stop_moves): " + i, get_first_word(queue[i].cmd))
                 }
                 /// We found a move that has not been stopped yet.
-                if (get_first_word(que[i].cmd) === "go" && !que[i].discard) {
+                if (get_first_word(queue[i].cmd) === "go" && !queue[i].discard) {
                     engine.send("stop");
-                    que[i].discard = true;
+                    queue[i].discard = true;
                 }
             }
         };
         
-        engine.get_cue_len = function get_cue_len()
+        engine.get_queue_len = function get_queue_len()
         {
-            return que.length;
+            return queue.length;
         };
         
         engine.quit = function ()

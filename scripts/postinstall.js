@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+/// License: MIT
+
+/// Creates a symlink called stockfish.js of the full version.
+
 "use strict";
 
 var fs = require("fs");

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/// This is an example of how to directly require() a stockfish.js engine as a CommonJS module.
+
 var Stockfish;
 var engine;
 

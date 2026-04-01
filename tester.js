@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/// License: MIT
+
 //var params = getParams({booleans: ["no-multi-threading"]});
 var params = require("util").parseArgs({strict: false, allowPositionals: false}).values;
 var score;

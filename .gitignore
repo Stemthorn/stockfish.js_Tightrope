@@ -25,5 +25,4 @@ tests/bench_tmp.epd
 
 etc/
 examples/node_modules/
-examples/package-lock.json
 bin/
