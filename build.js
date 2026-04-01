@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-//! Chess.com (c) 2025
+//! Chess.com (c)
 
 "use strict";
 
@@ -26,7 +26,7 @@ var preface;
 var postscript;
 var buildWithEmscripten;
 var child;
-var stockfishVersionNumber = "18";
+var stockfishVersionNumber = require("./package.json").buildVersion;
 var expectedEmscripten = "3.1.7";
 var fistRun;
 var basename;
