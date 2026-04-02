@@ -7,11 +7,12 @@
 var runSpawnSync = require("child_process").spawnSync;
 var runExecFileSync = require("child_process").execFileSync;
 var params = getParams({booleans: [
-    "no-chesscom", "h", "help", "help-all", "f", "force", "force-linking", "s", "silent", "bin", "colors", "no-color", "no-minify", "v", "verbose", "debug-wasm", "all", "skip-em-check", "single-threaded", "lite", "ultra-lite", "wasm-debug", "asm-js", "keep-syzygy", "hash", "no-split",
+    "no-chesscom", "h", "help", "help-all", "f", "force", "force-linking", "s", "silent", "bin", "colors", "no-color", "no-minify", "v", "verbose", "debug-wasm", "all",
+    "skip-em-check", "strict-em-check", "single-threaded", "lite", "ultra-lite", "wasm-debug", "asm-js", "keep-syzygy", "hash", "no-split",
     "skip-asm", "skip-single", "skip-lite", "skip-single-lite", "skip-lite-single", "skip-standard",
     "only-asm", "only-single", "only-lite", "only-single-lite", "only-lite-single", "only-standard",
-    "debug",
-    "do-not-verify-nets",
+    "debug", "do-not-verify-nets",
+    
 ]});
 var args = ["-j", require("os").cpus().length];
 var fs = require("fs");
@@ -239,6 +240,7 @@ function checkEmscriptenVersion()
 {
     var versionInfo;
     var exec = params.emcc || "emcc";
+    var passed;
     try {
         versionInfo = execFileSync(exec, ["--version"], {encoding: "utf8", env: process.env, cwd: __dirname});
         if (versionInfo.indexOf(expectedEmscripten) === -1) {
@@ -246,11 +248,16 @@ function checkEmscriptenVersion()
             console.error("\nEmscripten version does not match.\nExpected " + note(expectedEmscripten) + ". See " + note(exec + " --version") + " for your currently installed version.");
             console.error("\n" + "To install the expected verions, try:\n\n  > " + note("emsdk install " + expectedEmscripten) + "\n  > " + note("emsdk activate " + expectedEmscripten));
             console.error("\nOr add " + note("--skip-em-check") + " to bypass this check.\n");
+        } else {
+            passed = true;
         }
     } catch (e) {
         console.error(e);
         console.error(highlight("Warning:"));
         console.error("\nCould not confirm emscripten version. Set your " + note("emcc") + " path with the " + note("--emcc") +" flag, or add " + note("--skip-em-check") + " to bypass this check.\n");
+    }
+    if (!passed && params["strict-em-check"]) {
+        process.exit(1);
     }
 }
 
@@ -663,6 +670,7 @@ if (params.help || params["help-all"] || params.h) {
     console.log("  " + highlight("--skip-lite-single") + " Do not build lite single-threaded engine with " + highlight("--all"));
     console.log("  " + highlight("--skip-single") + "      Do not build non-lite single-threaded engine with " + highlight("--all"));
     console.log("  " + highlight("--skip-standard") + "    Do not build standard, multi-threaded engine with " + highlight("--all"));
+    console.log("  " + highlight("--strict-em-check") + "  Fail if Emscripten version does not match expected version (" + note(expectedEmscripten) + ")");
     console.log("  " + highlight("--split") + "=" + note("count") + "      Split up WASM binary how many parts");
     console.log("  " + highlight("--ultra-lite") + "       Embed even smaller net file");
     console.log("  " + highlight("-v --verbose") + "       Print extra info");
