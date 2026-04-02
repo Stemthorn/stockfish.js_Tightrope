@@ -39,7 +39,7 @@ if (!hasEngines()) {
     console.log("-----------")
     require("child_process").execFileSync("npm", ["i", "--force", "--no-package-lock", "--no-save", "stockfish@" + (stockfishVersion || "latest")], {cwd: __dirname});
     if (!hasEngines()) {
-        console.error("Could not find stockfish engine. Please run \"npm install\" first.");
+        console.error("Could not find stockfish engine.");
         process.exit(1);
     }
 }
